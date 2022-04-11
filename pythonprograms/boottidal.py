@@ -15,9 +15,14 @@ def placeholder_filler(synth_name: str, argument_list: list):
     template = '''\n:{{\nlet {parameters}
     \n:}}\n'''
     
+    
+    #if Param1 in json is int make 
    # if type(x) == int :
     #    parameters = ["{x} = pI {x}".format(x=x) for x argument_list]
-   # elif type(x) == float :
+    
+    #and if Param1 in json is float make 
+    # elif type(x) == float :
+                                #but dont know yet how to acces json, but soon i hope
     parameters = ["{x} = pF {x}".format(x=x) for x in argument_list]
     # weird formatting to match default file
     parameters = "\n     ".join(parameters)
@@ -61,5 +66,5 @@ if __name__ == "__main__":
     FILEPATH = get_coremodules_filepath()
     find_penultimate_occurence(filepath=FILEPATH, pattern="add;")
     new_def = placeholder_filler(synth_name = "blabla",
-            argument_list = ["in", "in2", "param", "param2"])
+              argument_list = ["param1","param2","param3","param4","param5"])
     inject_new_definition(text_content=new_def, filepath=FILEPATH)
