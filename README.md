@@ -1,6 +1,6 @@
 # faust2superdirt.py
 ## faust2superdirt.py is conceived as addon for [faust2sc.py](https://github.com/madskjeldgaard/faust2sc.py)
-Enabling writing automation on SuperDirt core files and BootTidal.hs as we make the installation of the Faust Extensions on SuperCollider.
+Enabling automated writing on SuperDirt core files and BootTidal.hs as we make or just after we make the installation of the Faust Extensions on SuperCollider.
 
 
 
