@@ -26,7 +26,7 @@
 		{ "maths.lib/version": "2.5" },
 		{ "misceffects.lib/name": "Misc Effects Library" },
 		{ "misceffects.lib/version": "2.0" },
-		{ "name": "gliitchi" },
+		{ "name": "testdsp" },
 		{ "platform.lib/name": "Generic Platform Library" },
 		{ "platform.lib/version": "0.2" },
 		{ "reverbs.lib/name": "Faust Reverb Library" },
