@@ -13,5 +13,5 @@ Needed to be fixed :
 * Maybe merging with the faust2sc.py as a -Tidal option ??
 
 
-> ><]]]^>
-    >  ><]]]^>
+> '><]]]^>'
+    >  '><]]]^>'
