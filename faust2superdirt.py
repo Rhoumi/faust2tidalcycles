@@ -12,28 +12,75 @@ import shutil
 ######▄▄▄#▄▄▄▄▄▄▄#▄▄▄▄▄▄▄#▄▄####▄#### 
 #####█   █       █       █  █##█ █###
 #####█   █  ▄▄▄▄▄█   ▄   █   █▄█ █###
-##▄##█   █ █▄▄▄▄▄█  █ █  █       █###
+##▄##█   █ █▄▄▄▄▄█  █#█  █       █###
 #█ █▄█   █▄▄▄▄▄  █  █▄█  █  ▄    █###
-#█       █▄▄▄▄▄█ █       █ █ █   █###
-#█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█  █▄▄█###
+#█       █▄▄▄▄▄█ █       █ █#█   █###
+#█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█##█▄▄█###
 #####################################
 
 # Opening JSON file
-with open('gliitchi.dsp.json') as json_file:
+with open('testvgroup.dsp.json') as json_file:
     json_data = json.load(json_file)
+#with open('testvgroup.dsp.json','r') as string:
+ #   json_data_string = json.load(string)
+  #  string.close()
+    
+  #  print(json_data_string)
  
     # Print the type of data variable
   #  print("Type:", type(json_data))
  
     # Print the data of dictionary
     
-    my_inputs = json_data['inputs']
-    my_outputs = json_data['outputs']
-    my_name = json_data['name']
+    my_inputs = 1#json_data['inputs']
+    my_outputs = 1#json_data['outputs']
+    my_name = 'yo'#json_data['name']
 
     
+    
+    addresses = ''
+    
+    
+def incr(y: int):
+    """ Inserting formated jsondata """
+    template = '''json_data["ui"][0]["items"]{basebase}[0]["type"]
+    '''
+    basebase=""
+    for x in range(0, y, 1) :
+        basebase = basebase+'''[x]["items"]'''
 
-   # my_arguments = json_data['address']
+    return template.format(y=y,
+                          basebase=basebase)
+     
+    
+def searching_keyskeys(x, base) :
+    for x in range(0,32) :
+        if base == 'vslider' or base == 'hslider' :
+            print("trouvé" + base)
+        elif base == 'vgroup' or base == 'hgroup' :
+            searching_keyskeys(x, incr(x))
+            print(x)
+            print(base)
+        else :
+            print("nul")
+            print("nope")
+    
+def searching_keys(x) :
+        if json_data["ui"][0]["items"][0]["type"] == 'vslider' or json_data["ui"][0]["items"][0]["type"] == 'hslider' :
+            print("trouvé" + json_data["ui"][0]["items"][0]["label"])
+        else :
+            print("+1")
+            searching_keyskeys(x, incr(x))
+    
+#for x in range(0, 32, 1):
+#        searching_keys(x)              
+        
+searching_keyskeys(0, incr(0))  
+print(json_data["ui"][0]["items"][0]["type"])
+
+  
+
+
     
  #WIP   
 """    if "address" in json_data :
@@ -45,7 +92,6 @@ with open('gliitchi.dsp.json') as json_file:
         my_arguments = my_arguments.join(json_data['address'])
         
     print(my_arguments)
-
     
  """
     
@@ -270,7 +316,7 @@ def bt_inject_new_definition(text_content: str, filepath: str):
 
 if __name__ == "__main__":
     
-    
+        
 #coresynth
     
     cs_FILEPATH = get_coresynths_filepath()
