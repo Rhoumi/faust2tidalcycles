@@ -22,26 +22,16 @@ import shutil
 # Opening JSON file
 with open('/home/ralt144mi/Documents/GRAME/TESTPY/testeffet.dsp.json') as json_file:
     json_data = json.load(json_file)
-#with open('testvgroup.dsp.json','r') as string:
- #   json_data_string = json.load(string)
-  #  string.close()
-    
-  #  print(json_data_string)
- 
-    # Print the type of data variable
-  #  print("Type:", type(json_data))
- 
-    # Print the data of dictionary
-    
+
     my_inputs = json_data['inputs']
     my_outputs = json_data['outputs']
     my_name = json_data['name']
-
-    
-    
-    addresses = ''
     
 
+    
+    #####PARAMETERS LISTS
+    
+    
 PARAMETER = ["hslider", "vslider", "hbargraph", "vbarbraph",
                             "nentry", "checkbox", "button"]
 GROUP = ["vgroup", "hgroup", "tgroup"]
@@ -87,18 +77,10 @@ def parameter_gatherer(data):
     return parameter_list
 
     
- #WIP   
-"""    if "address" in json_data :
-        my_arguments = ''
-        my_arguments = my_arguments.join(json_data['address'])
-    elif 'address' in json_data['ui'] :
-        my_arguments = my_arguments.join(json_data['address'])
-    elif 'address' in json_data['items'] :
-        my_arguments = my_arguments.join(json_data['address'])
-        
-    print(my_arguments)
     
- """
+    ###WIP PATHS....FILES....
+    
+    
 def get_header_paths(headerpath):
     folders = [
         path.join(headerpath, "plugin_interface"),
@@ -158,6 +140,8 @@ print(cs_loc)
 print(cm_loc)
 print(bt_loc)
 
+
+###END OF WIP ON PATHS..................
     
 """ 
  / \------------------, 
@@ -178,15 +162,14 @@ def get_coresynths_filepath(filename:str ='core-synths.scd'):
 
  
 
-def cs_placeholder_filler(synth_name: str, nb_inputs : int, argument_list: list):
+def cs_placeholder_filler(synth_name: str, c_synth_name:str, nb_inputs : int, argument_list: list):
     """ Inserting arguments in placeholder SynthDef """
-    template = '''\n    SynthDef(\"{synth_name}\" ++ ~dirt.numChannels, {{
+    template = '''\nSynthDef(\"{synth_name}\" ++ ~dirt.numChannels, {{
         | out, {in_list},{argument_list}|
         var signal = In.ar(out, ~dirt.numChannels);
-        signal = {synth_name}.ar({signal_beg},{signal_argument}, out);
+        signal = {c_synth_name}.ar({signal_beg},{signal_argument}, out);
         ReplaceOut.ar(out, signal);
-         }}).add;
-    \n
+         }}).add;\n
     '''
     ###add one "signal" by inputs
     signal_beg="signal"
@@ -200,7 +183,8 @@ def cs_placeholder_filler(synth_name: str, nb_inputs : int, argument_list: list)
     
     
     argument_beautify = ', '.join(argument_list)
-    return template.format(synth_name=synth_name, 
+    return template.format(synth_name=synth_name,
+                           c_synth_name=c_synth_name,
                            argument_list=argument_beautify,
                            signal_argument=argument_beautify,
                            nb_inputs=nb_inputs,
@@ -266,14 +250,17 @@ def cm_placeholder_filler(synth_name: str, argument_list: list):
                 {parameters},
                 out: ~out
             ])
-            }});
+            }} {subparameters} }});
     \n'''
     parameters = ["{x}: ~{x}".format(x=x) for x in argument_list]
+    subparameters = [",{{~{x}.notNil".format(x=x) for x in argument_list]
     # weird formatting to match default file
     parameters = ",\n                ".join(parameters)
+    subparameters = " or:  ".join(subparameters)
     parameters = parameters.replace('"', '')
     return template.format(synth_name=synth_name, 
-            parameters=parameters)
+            parameters=parameters,
+           subparameters=subparameters)
 
 def cm_find_penultimate_occurence(filepath: str, pattern: str):
     """ Find the penultimate occurence of pattern in file and return line """
@@ -331,17 +318,14 @@ def bt_placeholder_filler(synth_name: str, argument_list: list):
     \n:}}\n'''
     
     
-    #if Param1 in json is int make 
-   # if type(x) == int :
-    #    parameters = ["{x} = pI {x}".format(x=x) for x argument_list]
+    #FOR THE MOMENT it's only converting parameters to float because it always work
+    #but maybe in the future see if its a checkbox or button or something needed to be a int to maybe convert arguments to int ( ... = pI "...." )
     
-    #and if Param1 in json is float make 
-    # elif type(x) == float :
-                                #but dont know yet how to acces json, but soon i hope
-    parameters = ['{x} = pF ""{x}""'.format(x=x) for x in argument_list]
+    
+    parameters = [" {x} = pF \"{x}\"  ".format(x=x) for x in argument_list]
     # weird formatting to match default file
     parameters = "\n     ".join(parameters)
-    parameters = parameters.replace('"', '')
+    parameters = parameters.replace('', '')
     return template.format(synth_name=synth_name, 
             parameters=parameters)
 
@@ -381,6 +365,16 @@ def bt_inject_new_definition(text_content: str, filepath: str):
 
 if __name__ == "__main__":
     
+    
+    ###WIP PARSE and ARGUENTS
+  #  import argparse
+  #  import sys
+  #  import tempfile
+    
+    ###################################
+    
+    
+    
 #json
 
     json_data = json_to_ui_data(json_data)
@@ -395,6 +389,7 @@ if __name__ == "__main__":
     cs_FILEPATH = cs_loc
     cs_find_last_occurence(filepath=cs_FILEPATH, pattern="add;")
     new_def = cs_placeholder_filler(synth_name =  my_name,
+              c_synth_name = my_name.capitalize(),
               nb_inputs = my_inputs,                  
               argument_list = param)
     cs_inject_new_definition(text_content=new_def, filepath=cs_FILEPATH)
