@@ -11,7 +11,7 @@ Enabling automated writing on SuperDirt core-files and BootTidal.hs just after w
   
 * First argument is the path to the Faust.dsp.json file to be used, normally created in the same location as your Faust.dsp by faust2sc.py
 * Second argument is your BootTidal.hs path, it's never where you think it is, be carefull
-you can write the approximate path as long as your are still above it 
+</br>you can write the approximate path as long as your are still above it 
 
 ### example : 
 #### `python3 faust2superdirt.py '/home/myusername/Documents/Myfaustplugins/Myplug.dsp.json' '/home/myusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/'`
