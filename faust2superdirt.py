@@ -19,15 +19,6 @@ import shutil
 ##█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█##█▄▄█###
 ######################################
 
-# Opening JSON file
-with open('/home/ralt144mi/Documents/GRAME/TESTPY/testeffet.dsp.json') as json_file:
-    json_data = json.load(json_file)
-
-    my_inputs = json_data['inputs']
-    my_outputs = json_data['outputs']
-    my_name = json_data['name']
-    
-
     
     #####PARAMETERS LISTS
     
@@ -78,49 +69,7 @@ def parameter_gatherer(data):
 
     
     
-    ###WIP PATHS....FILES....
-    
-    
-def get_header_paths(headerpath):
-    folders = [
-        path.join(headerpath, "plugin_interface"),
-        path.join(headerpath, "server"),
-        path.join(headerpath, "common")
-    ]
-
-    if all(path.exists(folder) for folder in folders):
-        print("Found SuperCollider headers: %s" % headerpath)
-        return folders
-
-# Try and find SuperCollider headers on system
-def find_headers(headerpath):
-    folders = get_header_paths(headerpath)
-    if folders:
-        return folders
-
-    # Possible locations of SuperCollider headers
-    guess = [
-        "/usr/local/include/SuperCollider",
-        "/usr/local/include/supercollider",
-        "/usr/include/SuperCollider",
-        "/usr/include/supercollider",
-        "/usr/local/include/SuperCollider/",
-        "/usr/share/supercollider-headers",
-        path.join(os.getcwd(), "supercollider")
-    ]
-
-    if 'HOME' in os.environ:
-        guess.append(path.join(os.environ['HOME'], "supercollider"))
-
-    for headerpath in guess:
-        folders = get_header_paths(headerpath)
-        if folders:
-            return folders
-
-    sys.exit("Could not find SuperCollider headers")
-
-    
-find_headers("./include")
+    ###Files Finder
 
 def find_file(file_name, directory_name):
     files_found = []
@@ -132,13 +81,13 @@ def find_file(file_name, directory_name):
     return files_found
 
 
-cs_loc = ''.join(find_file('core-synths.scd', '/home/ralt144mi/.local/share/SuperCollider'))
-cm_loc = ''.join(find_file('core-modules.scd', '/home/ralt144mi/.local/share/SuperCollider'))
-bt_loc = ''.join(find_file('BootTidal.hs', '/home/ralt144mi/.cabal/share'))
+#cs_loc = ''.join(find_file('core-synths.scd', '/home/ralt144mi/.local/share/SuperCollider'))
+#cm_loc = ''.join(find_file('core-modules.scd', '/home/ralt144mi/.local/share/SuperCollider'))
+#bt_loc = ''.join(find_file('BootTidal.hs', '/home/ralt144mi/.cabal/share'))
 
-print(cs_loc)
-print(cm_loc)
-print(bt_loc)
+#print(cs_loc)
+#print(cm_loc)
+#print(bt_loc)
 
 
 ###END OF WIP ON PATHS..................
@@ -366,27 +315,58 @@ def bt_inject_new_definition(text_content: str, filepath: str):
 if __name__ == "__main__":
     
     
-    ###WIP PARSE and ARGUENTS
-  #  import argparse
-  #  import sys
-  #  import tempfile
+    import argparse
+    import sys
+    import tempfile
+
+    parser = argparse.ArgumentParser(
+        description='Compile faust .dsp files to SuperCollider plugins including class and help files and supernova objects'
+    )
+
+    parser.add_argument("inputjson", help="A Faust JSON .dsp.json file to be used, normally created in the same location as your Faust.dsp by faust2sc.py")
+
+    parser.add_argument("boottidalloc", help="Your BootTidal.hs location, it's never where you think it is, be carefull")
     
-    ###################################
-    
+    parser.add_argument("superdirtloc", help="Your SuperDirt folder location, usually /home/yourname/.local/share/SuperCollider/downloaded-quarks/SuperDirt")
+
+
+    # args = parser.parse_args()
+    args, unknownargs = parser.parse_known_args()
+
+    # Flatten list of arguments to one string
+    unknownargs = " ".join(unknownargs)
+    faustflags = unknownargs or ""
+
+    # Temporary folder for intermediary files
+    tmp_folder = tempfile.TemporaryDirectory(prefix="faust.")
+
+    #scresult = faust2sc(args.inputfile, tmp_folder.name, noprefix, args.architecture, faustflags)
+
     
     
 #json
 
+# Opening JSON file
+
+    with open(args.inputjson) as json_file:
+        json_data = json.load(json_file)
+        my_inputs = json_data['inputs']
+        my_outputs = json_data['outputs']
+        my_name = json_data['name']
+
     json_data = json_to_ui_data(json_data)
     param = parameter_gatherer(json_data)
     param = list(flatten(param))
+    print("the list of parameters is : ")
     print(param)
+
     
         
 #coresynth
     
    # cs_FILEPATH = get_coresynths_filepath()
-    cs_FILEPATH = cs_loc
+    cs_FILEPATH = ''.join(find_file('core-synths.scd', args.superdirtloc))
+    print(cs_FILEPATH)
     cs_find_last_occurence(filepath=cs_FILEPATH, pattern="add;")
     new_def = cs_placeholder_filler(synth_name =  my_name,
               c_synth_name = my_name.capitalize(),
@@ -397,7 +377,8 @@ if __name__ == "__main__":
 #coremodules
 
     #cm_FILEPATH = get_coremodules_filepath()
-    cm_FILEPATH = cm_loc
+    cm_FILEPATH = ''.join(find_file('core-modules.scd', args.superdirtloc))
+    print(cm_FILEPATH)
     cm_find_penultimate_occurence(filepath=cm_FILEPATH, pattern=");")
     new_def = cm_placeholder_filler(synth_name = my_name,
               argument_list = param)
@@ -406,7 +387,8 @@ if __name__ == "__main__":
 #boottidal 
 
     #bt_FILEPATH = get_boottidal_filepath()
-    bt_FILEPATH = bt_loc
+    bt_FILEPATH = ''.join(find_file('BootTidal.hs', args.boottidalloc))
+    print(bt_FILEPATH)
     bt_find_penultimate_occurence(filepath=bt_FILEPATH, pattern="add;")
     new_def = bt_placeholder_filler(synth_name = my_name,
               argument_list = param)
