@@ -1,5 +1,5 @@
 # faust2superdirt.py
-## faust2superdirt.py is conceived as autonomous extension to be used after [faust2sc.py](https://github.com/madskjeldgaard/faust2sc.py)
+## faust2superdirt.py is conceived as autonomous extension in order to be used after [faust2sc.py](https://github.com/madskjeldgaard/faust2sc.py)
 Enabling automated writing on SuperDirt core-files and BootTidal.hs just after we make the installation of the Faust Extensions on SuperCollider.
 
 
