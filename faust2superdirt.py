@@ -323,11 +323,9 @@ if __name__ == "__main__":
         description='Compile faust .dsp files to SuperCollider plugins including class and help files and supernova objects'
     )
 
-    parser.add_argument("inputjson", help="A Faust JSON .dsp.json file to be used, normally created in the same location as your Faust.dsp by faust2sc.py")
-
-    parser.add_argument("boottidalloc", help="Your BootTidal.hs location, it's never where you think it is, be carefull")
+    parser.add_argument("inputjson", help="A Faust JSON .dsp.json file to be used, normally created in the same path as your Faust.dsp by faust2sc.py")
     
-    parser.add_argument("superdirtloc", help="Your SuperDirt folder location, usually /home/yourname/.local/share/SuperCollider/downloaded-quarks/SuperDirt")
+    parser.add_argument("boottidalloc", help="Your BootTidal.hs path, it's never where you think it is, be carefull")
 
 
     # args = parser.parse_args()
@@ -342,7 +340,7 @@ if __name__ == "__main__":
 
     #scresult = faust2sc(args.inputfile, tmp_folder.name, noprefix, args.architecture, faustflags)
 
-    
+
     
 #json
 
@@ -365,7 +363,7 @@ if __name__ == "__main__":
 #coresynth
     
    # cs_FILEPATH = get_coresynths_filepath()
-    cs_FILEPATH = ''.join(find_file('core-synths.scd', args.superdirtloc))
+    cs_FILEPATH = ''.join(find_file('core-synths.scd', os.environ['HOME']+'/.local/share/SuperCollider'))
     print(cs_FILEPATH)
     cs_find_last_occurence(filepath=cs_FILEPATH, pattern="add;")
     new_def = cs_placeholder_filler(synth_name =  my_name,
@@ -377,7 +375,7 @@ if __name__ == "__main__":
 #coremodules
 
     #cm_FILEPATH = get_coremodules_filepath()
-    cm_FILEPATH = ''.join(find_file('core-modules.scd', args.superdirtloc))
+    cm_FILEPATH = ''.join(find_file('core-modules.scd', os.environ['HOME']+'/.local/share/SuperCollider'))
     print(cm_FILEPATH)
     cm_find_penultimate_occurence(filepath=cm_FILEPATH, pattern=");")
     new_def = cm_placeholder_filler(synth_name = my_name,
@@ -393,3 +391,5 @@ if __name__ == "__main__":
     new_def = bt_placeholder_filler(synth_name = my_name,
               argument_list = param)
     bt_inject_new_definition(text_content=new_def, filepath=bt_FILEPATH)
+    
+
