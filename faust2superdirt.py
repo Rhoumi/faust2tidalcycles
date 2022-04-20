@@ -27,6 +27,9 @@ PARAMETER = ["hslider", "vslider", "hbargraph", "vbarbraph",
                             "nentry", "checkbox", "button"]
 GROUP = ["vgroup", "hgroup", "tgroup"]
 
+TIDALCONTROL = ["gain", "sound", "s", "delay", "setcps", "midinote", "note", "n","octave","begin","end","sustain","legato","loop","unit","length","fadeTime","fadeInTime","speed","endSpeed","gain","overgain","channel","lag","offset","sound","array","midichan","control","ccn","ccv","polyTouch","midibend","miditouch","ctlNum","frameRate","frames","hours","midicmd","minutes","progNum","seconds","songPtr","uid","val","timescale","timescalewin", "toArg", "from", "to", "accelerate", "amp", "attack", "bandf", "bandq", "begin", "legato", "clhatdecay", "crush", "coarse", "channel", "cut", "cutoff", "cutoffegint", "decay", "delay", "delayfeedback", "delaytime", "detune", "djf", "dry", "end", "fadeTime", "fadeInTime", "freq", "gain", "gate", "hatgrain", "hcutoff", "hold", "hresonance", "lagogo", "lclap", "lclaves", "lclhat", "lcrash", "leslie", "lrate", "lsize", "lfo", "lfocutoffint", "lfodelay", "lfoint", "lfopitchint", "lfoshape", "lfosync", "lhitom", "lkick", "llotom", "lock", "loop", "lophat", "lsnare","n", "note", "degree", "mtranspose", "ctranspose", "harmonic", "stepsPerOctave", "octaveR", "nudge", "octave", "offset", "ophatdecay", "orbit", "overgain", "overshape", "pan", "panspan", "pansplay", "panwidth", "panorient", "pitch1", "pitch2", "pitch3", "portamento", "rate", "release", "resonance", "room",  "sagogo", "sclap", "sclaves", "scrash", "semitone", "shape", "size", "slide", "speed",  "squiz", "stutterdepth", "stuttertime", "sustain",  "timescale", "timescalewin", "tomdecay","unit",  "velocity","vcfegint", "vcoegint",  "voice",  "vowel",  "waveloss", "dur",  "modwheel", "expression",  "sustainpedal", "tremolodepth","tremolorate", "phaserdepth", "phaserrate", "fshift", "fshiftnote","fshiftphase", "triode", "krush",  "kcutoff", "octer", "octersub", "octersubsub","ring","ringf", "ringdf", "distort", "freeze", "xsdelay", "tsdelay",  "real",  "imag", "enhance", "partials","comb","smear", "scram", "binshift", "hbrick","lbrick","midichan", "control","ccn","ccv","polyTouch","midibend", "miditouch","ctlNum", "frameRate", "frames", "hours", "midicmd", "minutes", "progNum","seconds","songPtr", "uid", "val","cps", "up", "att", "bpf", "bpq", "chdecay", "ctf", "ctfg", "delayfb", "dfb", "delayt", "dt", "det", "fadeOutTime", "gat", "hg", "hpf", "hpq","lag","ldb","lch", "lcl", "lcp", "lcr", "lfoc", "lfoi", "lfop", "lht", "llt", "loh", "lpf", "lpq", "lsn", "ohdecay", "phasdp", "phasr","pit1","pit2", "pit3", "por", "rel", "sag", "scl","scp","scr", "sz", "sld", "std", "stt", "sus", "tdecay", "tremdp", "tremr", "vcf", "vco", "voi"]
+
+
 def flatten(container):
     """ Helper function to flatten arbitrarily nested lists """
     for i in container:
@@ -40,19 +43,64 @@ def json_to_ui_data(json_data: dict):
     """ Return the UI part of the Faust-generated JSON """
     return json_data["ui"][0]
 
+
+def flatteny(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatteny(S[0]) + flatteny(S[1:])
+    return S[:1] + flatteny(S[1:])
+#recuperateur de fin d'address
+#storager of address' end
+def unaddress(address: str) :
+    raddress = address.rsplit('/', 2)
+    raddresslast = raddress[1]+"_"+(raddress[2])
+    return raddresslast
+
+#videur de vide
+#emptier of emptyness
+def devideur(tuples): 
+    tuples = [t for t in tuples if t] 
+    return tuples 
+
+#selectionneur    \o/
+#selector         |\ 
+def selector(lalist : list):
+    for x in range(0, (len(lalist)-1)):
+        dopple = (lalist[x])
+        print(dopple)
+        #si le label est déjà un control de tidal
+        #remplace le nom avec le label supérieur
+        #If the label is already a tidal control
+        #swap with a longer label address
+        if dopple in TIDALCONTROL : 
+            lalist[x] = ''
+        elif lalist.count(dopple) > 1 :
+            lalist[x] = ''
+        elif lalist.count(dopple) == 1 :
+            lalist[x+1] = ''
+    lalist = devideur(lalist)    
+    return lalist       
+
 def item_list_processor(items_value: list):
     """ Process data contained in "items" keys """
     parameter_list = []
+    long_parameter_list = []
     # On parcourt chaque dictionnaire que l'on trouve dans la liste "items"
     for items in items_value:
         if isinstance(items, dict):
             # Si on voit que le type correspond à un param, on gagne un param
-            if items["type"] in PARAMETER:
-                parameter_list.append(items["label"])
+            if items["type"] in PARAMETER :
+                parameter_list.append(items["label"]) 
             # Sinon, cela signifie que l'on doit 
             # continuer à descendre pour extraire
-            elif items["type"] in GROUP:
+            elif items["type"] in GROUP :
                 parameter_list.append(item_list_processor(items["items"]))
+            #Crée une double liste de forme : ['param1' , 'group_param1',...] 
+            #afin de la passer dans la fonction selector 
+            #qui va décider lequel choisir
+            if items["label"] in parameter_list :
+                parameter_list.append(unaddress(items["address"]))
         else:
             pass
     return parameter_list
@@ -80,17 +128,6 @@ def find_file(file_name, directory_name):
                 files_found.append(file_path)
     return files_found
 
-
-#cs_loc = ''.join(find_file('core-synths.scd', '/home/ralt144mi/.local/share/SuperCollider'))
-#cm_loc = ''.join(find_file('core-modules.scd', '/home/ralt144mi/.local/share/SuperCollider'))
-#bt_loc = ''.join(find_file('BootTidal.hs', '/home/ralt144mi/.cabal/share'))
-
-#print(cs_loc)
-#print(cm_loc)
-#print(bt_loc)
-
-
-###END OF WIP ON PATHS..................
     
 """ 
  / \------------------, 
@@ -116,9 +153,8 @@ def cs_placeholder_filler(synth_name: str, c_synth_name:str, nb_inputs : int, ar
     template = '''\nSynthDef(\"{synth_name}\" ++ ~dirt.numChannels, {{
         | out, {in_list},{argument_list}|
         var signal = In.ar(out, ~dirt.numChannels);
-        signal = {c_synth_name}.ar({signal_beg},{signal_argument}, out);
-        ReplaceOut.ar(out, signal);
-         }}).add;\n
+        signal = {c_synth_name}.ar({signal_beg}, {signal_argument}, out);
+        ReplaceOut.ar(out, signal);}}).add;\n
     '''
     ###add one "signal" by inputs
     signal_beg="signal"
@@ -192,7 +228,7 @@ def get_coremodules_filepath(filename:str ='core-modules.scd'):
 
 def cm_placeholder_filler(synth_name: str, argument_list: list):
     """ Inserting arguments in placeholder """
-    template = '''\n      ~dirt.addModule('{synth_name}',
+    template = '''\n~dirt.addModule('{synth_name}',
         {{|dirtEvent|
             dirtEvent.sendSynth('{synth_name}' ++ ~dirt.numChannels,
             [ 
@@ -202,7 +238,7 @@ def cm_placeholder_filler(synth_name: str, argument_list: list):
             }} {subparameters} }});
     \n'''
     parameters = ["{x}: ~{x}".format(x=x) for x in argument_list]
-    subparameters = [",{{~{x}.notNil".format(x=x) for x in argument_list]
+    subparameters = [",{{~{x}.notNil".format(x=argument_list[0])]
     # weird formatting to match default file
     parameters = ",\n                ".join(parameters)
     subparameters = " or:  ".join(subparameters)
@@ -351,12 +387,14 @@ if __name__ == "__main__":
         my_inputs = json_data['inputs']
         my_outputs = json_data['outputs']
         my_name = json_data['name']
-
+    
     json_data = json_to_ui_data(json_data)
     param = parameter_gatherer(json_data)
     param = list(flatten(param))
+    param = selector(param)
     print("the list of parameters is : ")
     print(param)
+    
 
     
         
@@ -364,6 +402,7 @@ if __name__ == "__main__":
     
    # cs_FILEPATH = get_coresynths_filepath()
     cs_FILEPATH = ''.join(find_file('core-synths.scd', os.environ['HOME']+'/.local/share/SuperCollider'))
+    print("the path to core-synths.scd : ")
     print(cs_FILEPATH)
     cs_find_last_occurence(filepath=cs_FILEPATH, pattern="add;")
     new_def = cs_placeholder_filler(synth_name =  my_name,
@@ -376,6 +415,7 @@ if __name__ == "__main__":
 
     #cm_FILEPATH = get_coremodules_filepath()
     cm_FILEPATH = ''.join(find_file('core-modules.scd', os.environ['HOME']+'/.local/share/SuperCollider'))
+    print("the path to core-modules.scd : ")
     print(cm_FILEPATH)
     cm_find_penultimate_occurence(filepath=cm_FILEPATH, pattern=");")
     new_def = cm_placeholder_filler(synth_name = my_name,
@@ -386,9 +426,11 @@ if __name__ == "__main__":
 
     #bt_FILEPATH = get_boottidal_filepath()
     bt_FILEPATH = ''.join(find_file('BootTidal.hs', args.boottidalloc))
+    print("the path to BootTidal.hs : ")
     print(bt_FILEPATH)
     bt_find_penultimate_occurence(filepath=bt_FILEPATH, pattern="add;")
     new_def = bt_placeholder_filler(synth_name = my_name,
               argument_list = param)
     bt_inject_new_definition(text_content=new_def, filepath=bt_FILEPATH)
     
+
