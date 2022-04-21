@@ -6,10 +6,10 @@ It's got two arguments, the path to the jsonfile created by the faust2sc.py comp
 
 # How to use
 
-## 1. The package maker
+## The package maker
 Run the faust2superdirt_packagemaker.py to create the different files. In order to add the effets manually or automatically.
 * `python3 faust2superdirt_packagemaker.py 'PathtoyourJsonFile'`
-* 
+
 ## /manual_installation\
 
 In the files2add directory, you will find three differents files :
@@ -32,6 +32,7 @@ just run the python program faust2superdirt.py with the two arguments :
 * the path to your BootTidal.hs
 ### example : 
  `python3 faust2superdirt.py '/home/myusername/Documents/Myfaustplugins/Myplug.dsp.json' '/home/myusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/'`
+ 
 It will automatically write the where it has to be. 
 
 
