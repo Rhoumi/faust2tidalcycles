@@ -1,10 +1,13 @@
 # faust2superdirt.py
-## faust2superdirt.py is conceived as an autonomous extension in order to be used after [faust2sc.py](https://github.com/madskjeldgaard/faust2sc.py)
+## faust2superdirt.py is a python program, created to help users of TidalCycles in the faust audio effect adding process.
+## faust2superdirt.py is conceived in adequacy with faust2sc.py [faust2sc.py](https://github.com/madskjeldgaard/faust2sc.py)
 Enabling automated writing on SuperDirt core-files and BootTidal.hs just after we make the installation of the Faust Extensions on SuperCollider.
+It's got two arguments, the path to the jsonfile created by the faust2sc.py compiler and the path to your BootTidal.hs
 
 # How to use
 
-## 1. Download 
+## 1. The packagea
+
 
 ## 2. just run 
 ### `python3 faust2superdirt.py 'PathtoyourJsonFile' 'PathtoyourBootTidal.hs'`
