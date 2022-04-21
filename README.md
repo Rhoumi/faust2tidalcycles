@@ -21,7 +21,7 @@ In the files2add directory, you will find three differents files :
 
 * add2BootTidal.scd 
 
-     Add this to your BootTidal.hs file, be careful it's never where you think it is, mine is located in /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/
+    ___ Add this to your BootTidal.hs file, be careful it's never where you think it is, mine is located in /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/
 
 ## /automatic_installation\
 
