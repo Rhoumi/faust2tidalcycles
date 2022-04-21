@@ -17,11 +17,11 @@ In the files2add directory, you will find three differents files :
 * add2core-synth.scd 
 * add2core-modules.scd 
 
-     Add this to your core-synth.scd and core-modules.scd files usually located in /home/yourusername/.local/share/SuperCollider/downloaded-quarks/SuperDirt/synths/
+    _______  Add this to your core-synth.scd and core-modules.scd files usually located in /home/yourusername/.local/share/SuperCollider/downloaded-quarks/SuperDirt/synths/
 
 * add2BootTidal.scd 
 
-    ___ Add this to your BootTidal.hs file, be careful it's never where you think it is, mine is located in /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/
+    _______ Add this to your BootTidal.hs file, be careful it's never where you think it is, mine is located in /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/
 
 ## /automatic_installation\
 
