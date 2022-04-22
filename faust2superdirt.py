@@ -406,7 +406,7 @@ if __name__ == "__main__":
     print(cs_FILEPATH)
     cs_find_last_occurence(filepath=cs_FILEPATH, pattern="add;")
     new_def = cs_placeholder_filler(synth_name =  my_name,
-              c_synth_name = my_name.capitalize(),
+              c_synth_name = "Faust" + my_name.capitalize(),
               nb_inputs = my_inputs,                  
               argument_list = param)
     cs_inject_new_definition(text_content=new_def, filepath=cs_FILEPATH)
