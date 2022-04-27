@@ -20,7 +20,8 @@ just run the python program `faust2tidalcycles` with two argument :
 
 It will automatically write the where it has to be. 
 
-### Exemple : `faust2tidalcycles -i /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/BootTidal.hs`
+### Exemple : 
+```faust2tidalcycles -i /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/BootTidal.hs```
 
 ## /package_installation\
 
@@ -30,7 +31,8 @@ Create an installation package, with
 * The class file and the .so file to put in Supercollider Extensions  
 * And a personalized HelpFile to verify name, inputs, outputs and parameters list. 
 
-### Exemple : `faust2tidalcycles -p 1 /myFaustDSPdir/MyEffect.dsp`
+### Exemple : 
+```faust2tidalcycles -p 1 /myFaustDSPdir/MyEffect.dsp```
 
 faust2tidalcycles create package files in your DSP location
 
