@@ -21,7 +21,7 @@ just run the python program `faust2tidalcycles` with two argument :
 It will automatically write the where it has to be. 
 
 ### Exemple : 
-```faust2tidalcycles -i /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/BootTidal.hs```
+```faust2tidalcycles -i /home/yourusername/.cabal/share/x86_64-linux-ghc-8.6.5/tidal-1.7.10/BootTidal.hs /myFaustDSPdir/MyEffect.dsp```
 
 ## /package_installation\
 
