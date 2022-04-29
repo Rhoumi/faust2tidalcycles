@@ -4,7 +4,7 @@
 `faust2tidalcycles` works in adequacy with faust2supercollider,
 you need to have faust installed on your computer.
 
-## faust2tidalcycles has two arguments
+## faust2tidalcycles has three arguments
 
 * -p {0,1} , 1 to create the package, 0 == no package, 0 by default (optional for package installation)
 * -i BootTidalPath, path to your BootTidal.hs (necessary in automatic installation mode)
