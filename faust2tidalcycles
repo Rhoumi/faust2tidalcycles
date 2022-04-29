@@ -50,7 +50,7 @@ def item_list_processor(items_value: list):
             # Si on voit que le type correspond à un param, on gagne un param
             # If it match it append
             if items["type"] in PARAMETER:
-                    parameter_list.append(items["address"])
+                    parameter_list.append(items["shortname"])
             # Sinon, cela signifie que l'on doit 
             # continuer à descendre pour extraire
             # else keep searching through dicts
@@ -261,10 +261,10 @@ def cm_inject_new_definition(text_content: str, filepath: str):
 
 def bt_placeholder_filler(synth_name: str, argument_list: list):
     """ Inserting arguments in placeholder SynthDef """
-    template = '''\n:{{\nlet {parameters}
+    template = '''\n:{{\nlet\n     {parameters}
     \n:}}\n'''    
     
-    parameters = [" {x} = pF \"{x}\"  ".format(x=x) for x in argument_list]
+    parameters = ["{x} = pF \"{x}\"  ".format(x=x) for x in argument_list]
     # weird formatting to match default file
     parameters = "\n     ".join(parameters)
     parameters = parameters.replace('', '')
